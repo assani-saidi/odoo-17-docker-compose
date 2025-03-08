@@ -3,3 +3,5 @@ etc/odoo-server.log
 etc/addons/
 etc/sessions/
 etc/filestore/
+pgadmin_data/
+odoo_17.0+e.latest.tar.gz
