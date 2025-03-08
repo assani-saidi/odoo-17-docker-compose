@@ -22,6 +22,7 @@ services:
       - db
     volumes:
       - ./pgadmin_data:/var/lib/pgadmin
+    restart: always
 
   odoo17:
     image: odoo:17
