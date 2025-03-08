@@ -16,13 +16,14 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: assanisaidi73@gmail.com # Update with your preferred email
       PGADMIN_DEFAULT_PASSWORD: rashid # Update with a secure password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "3000:80" # Access pgAdmin at http://localhost:3000
     depends_on:
       - db
     volumes:
-      - ./pgadmin_data:/var/lib/pgadmin
-    restart: always
+      - /var/lib/pgadmin
+    restart: unless-stopped
 
   odoo17:
     image: odoo:17
