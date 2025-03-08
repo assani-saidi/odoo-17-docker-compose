@@ -2,9 +2,8 @@ version: '2'
 services:
   db:
     image: postgres:16
-    user: root
     environment:
-      - POSTGRES_USER=assani
+      - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=rashid
       - POSTGRES_DB=postgres
     restart: always # run as a service
@@ -13,6 +12,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    user: root
     environment:
       PGADMIN_DEFAULT_EMAIL: assanisaidi73@gmail.com # Update with your preferred email
       PGADMIN_DEFAULT_PASSWORD: rashid # Update with a secure password
@@ -37,7 +37,7 @@ services:
     command: --
     environment:
       - HOST=db
-      - USER=assani
+      - USER=odoo
       - PASSWORD=rashid
     volumes:
       #- /etc/timezone:/etc/timezone:ro
