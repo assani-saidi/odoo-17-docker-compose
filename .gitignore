@@ -1,4 +1,5 @@
 postgresql/
+addons.zip
 etc/odoo-server.log
 etc/addons/
 etc/sessions/
