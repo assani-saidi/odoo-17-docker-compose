@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_reports.general_ledger_report" model="account.report">
+        <field name="column_ids">
+            <record id="general_ledger_report_column_foreign_balance" model="account.report.column">
+                <field name="name">Foreign Balance</field>
+                <field name="expression_label">foreign_balance</field>
+                <field name="figure_type">float</field>
+            </record>
+        </field>
+    </record>
+</odoo>

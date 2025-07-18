@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="services.HomeSubscriptionStrip" t-inherit="web_enterprise.HomeMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_apps')]" position="before">
+            <style>
+                .strip{
+<!--                    display: none !important;-->
+                }
+                .underlined{
+                    text-decoration: underline !important;
+                    font-weight: bold !important;
+                    cursor: pointer;
+                }
+            </style>
+            <div t-if="this.state.showExpireWarning">
+                <t t-if="this.state.expiryDays &lt; 1">
+                    <div role="alert" class="strip alert o-hidden-ios text-center mt-4 alert-danger">
+                        <span>Your payroll subscription has expired. Please renew your license <span t-on-click="() => this.forceStartSubProcess()" class="underlined">here</span>.</span>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div role="alert" class="strip alert o-hidden-ios text-center mt-4 alert-warning">
+                        <span>Your payroll subscription will expire in <span t-esc="this.state.expiryDays"/> days. Please renew your license <span t-on-click="() => this.forceStartSubProcess()" class="underlined">here</span>.</span>
+                    </div>
+                </t>
+                </div>
+        </xpath>
+    </t>
+</templates>

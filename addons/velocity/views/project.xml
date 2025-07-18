@@ -1,0 +1,286 @@
+<odoo>
+    <data>
+
+        <record id="project_kanban_inherit_view" model="ir.ui.view">
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="on_create"></attribute>
+                    <attribute name="action"></attribute>
+                    <attribute name="quick_create_view"></attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_inherit_view" model="ir.ui.view">
+            <field name="name">Velocity Project Inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+
+                <!-- <xpath expr="//header" position="inside">
+                    <button name="generate_invoice" type="object" 
+                        invisible="supplier_invoice" class="btn-primary"
+                        confirm="This will create a posted invoice. Do you want to continue?">
+                        Generate Invoice
+                    </button>
+                </xpath> -->
+
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="string">Trip Manager</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" string="Trip Number"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_start']" position="replace">
+                    <field name="date_start" string="Start Date" required="1"/>
+                    <field name="end_date" string="End Date" required="0"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="vehicle" required="1"/>
+                    <field name="driver" required="1"/>
+                    <field name="product" string="Service" required="1" invisible="1"/>
+                    <field name="good" string="Good" required="1"/>
+                    <field name="good_quantity" string="Capacity" required="1"/>
+                    <field name="route" required="1"/>
+                    <field name="route_distance"/>
+                    <field name="supplier" string="Supplier"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='privacy_visibility']" position="before">
+                    <field name="currency_id" invisible="true"/>
+                </xpath>
+
+                <xpath expr="//field[@name='privacy_visibility']" position="before">
+                    <field name="super_trip" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='tag_ids']" position="replace"></xpath>
+
+                <xpath expr="//field[@name='label_tasks']" position="replace"></xpath>
+
+                <xpath expr="//page[@name='description']" position="replace">
+                    <page name="trip" string="Trip Details">
+                        <h3>Loading Information</h3>
+                        <hr/>
+                        <group>
+                            <group>
+                                <field name="loading_point"/>
+                                <field name="loading_first_weight"/>
+                                <field name="loading_second_weight"/>
+                                <field name="loading_net_weight"/>
+                            </group>
+                            <group>
+                                <field name="date_arrived_at_loading"/>
+                                <field name="loading_quantity" invisible="1"/>
+                                <field name="load_date"/>
+                                <field name="supplier_invoice" string="Supplier Invoice Number"/>
+                                <field name="good_price" string="Price Per Ton" required="1"/>
+                                <field name="supplier_invoice_value"/>
+                            </group>
+                        </group>
+                        <br/>
+                        <h3>Offloading Information</h3>
+                        <hr/>
+                        <group>
+                            <group>
+                                <field name="offloading_point"/>
+                                <field name="offloading_first_weight"/>
+                                <field name="offloading_second_weight"/>
+                                <field name="offloading_net_weight"/>
+                            </group>
+                            <group>
+                                <field name="quantity_offloaded" invisible="1"/>
+                                <field name="date_arrived_at_offloading"/>
+                                <field name="quantity_loaded" invisible="1"/>
+                                <field name="offload_date"/>
+                                <field name="quantity_difference"/>
+                                <field name="shortage_deduction"/>
+                                <field name="d_note" string="D Note"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="driver_vehicle" string="Billing">
+                        <!--<h3>Billing Information</h3>
+                        <hr/>
+                        <group>
+                            <group>
+                                <field name="clearing_invoice" readonly="1" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="cd3_number"/>
+                                <field name="cd3_amount" string="CD3 Value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>-->
+                        <h3>CD3 Information</h3>
+                        <hr/>
+                        <group>
+                            <group>
+                                <field name="road_manifest"/>
+                                <field name="cd3_number"/>
+                            </group>
+                            <group>
+                                <field name="cd3_rate" string="CD3 Rate"/>
+                                <field name="cd3_amount" string="CD3 Value"/>
+                            </group>
+                        </group>
+                        <h3>Invoice Information</h3>
+                        <hr/>
+                        <group>
+                            <group>
+                                <field name="partner_id" string="Customer"/>
+                                <field name="transport_invoice" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="route_rate" string="Transport Rate"/>
+                                <field name="transport_invoice_value"/>
+                                <field name="currency"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="project_search_inherit_view" model="ir.ui.view">
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='own_projects']" position="before">
+                    <filter string="Trips in Progress" name="in_progress" domain="[('end_date', '=', False)]"/>
+                    <filter string="Completed Trips" name="completed" domain="[('end_date', '!=', False)]"/>
+                    <separator/>
+                    <filter string="Enroute to loading" name="enroute_loading"
+                            domain="[('loading_point', '=', False)]"/>
+                    <filter string="Enroute to offloading" name="enroute_offloading"
+                            domain="[('offloading_point', '=', False)]"/>
+                    <filter string="Enroute to yard" name="enroute_offloading"
+                            domain="[('offloading_point', '!=', False), ('loading_point', '!=', False), ('end_date', '=', False)]"/>
+                    <separator/>
+                    <filter string="Invoiced Trips" name="invoiced" domain="[('transport_invoice', '!=', False)]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="context">{'search_default_in_progress': 1}</field>
+        </record>
+
+        <!-- Super Trip Views -->
+        <record id="super_trip_window_action" model="ir.actions.act_window">
+            <field name="name">Super Trips</field>
+            <field name="res_model">velocity.super_trip</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No trips yet!
+                </p>
+                <p>
+                    Get started managing your round trips under a single tracked super trip.
+                </p>
+            </field>
+        </record>
+
+        <record id="super_trip_kanban_view" model="ir.ui.view">
+            <field name="name">super_trip_kanban_view</field>
+            <field name="model">velocity.super_trip</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <kanban class="o_project_kanban" js_class="project_project_kanban">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="trips"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click oe_kanban_content oe_kanban_card container">
+                                <div class="row mb4">
+                                    <h6 class="o_text_overflow" t-att-title="record.name.value">
+                                        <t t-esc="record.name.value"/>
+                                    </h6>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-4 o_kanban_primary_left">
+                                        <t t-esc="record.company_id.value"/>
+                                    </div>
+                                    <div class="col-2" />
+                                    <div class="col-4 o_kanban_primary_right">
+                                        <t t-esc="record.trips.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="super_trip_tree_view" model="ir.ui.view">
+            <field name="name">super_trip_tree_view</field>
+            <field name="model">velocity.super_trip</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="trips" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="super_trip_form_view" model="ir.ui.view">
+            <field name="name">super_trip_form_view</field>
+            <field name="model">velocity.super_trip</field>
+            <field name="priority">3</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="VL-23-0009"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="analytic_account_id"/>
+                            </group>
+                        </group>
+                        <notebook class="mt16">
+                            <page string="Tracked Trips">
+                                <field name="company_id" invisible="True"/>
+                                <field name="analytic_account_id" invisible="True"/>
+                                <field name="trips" context="{'default_company_id': company_id, 'default_analytic_account_id': analytic_account_id }">
+                                    <tree string="Trips">
+                                        <field name="name"/>
+                                        <field name="driver"/>
+                                        <field name="vehicle"/>
+                                        <field name="date_start" widget="date"/>
+                                        <field name="end_date" widget="date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_super_trips" name="Super Trips" action="super_trip_window_action"
+                  parent="project.menu_main_pm" sequence="1"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+
+        <record id="view_fleet_inherit_form" model="ir.ui.view">
+            <field name="model">fleet.vehicle</field>
+            <field name="name">Vehicle Extension View</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="mode">extension</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='driver_id']" position="replace">
+                    <field name="driver" required="1"/>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="before">
+                    <field name="fleet_number" required="1"/>
+                    <field name="analytic_account_id" readonly="analytic_account_id != False"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="asset" string="Attached Trailer or Tanker" domain="[('company_id', '=', company_id)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Fleet Assets Views -->
+        <record id="fleet_asset_window_action" model="ir.actions.act_window">
+            <field name="name">Fleet Assets</field>
+            <field name="res_model">velocity.fleet_asset</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No trailers or tankers yet!
+                </p>
+            </field>
+        </record>
+
+        <record id="fleet_asset_tree_view" model="ir.ui.view">
+            <field name="name">fleet_asset_tree_view</field>
+            <field name="model">velocity.fleet_asset</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="fleet_asset_form_view" model="ir.ui.view">
+            <field name="name">fleet_asset_form_view</field>
+            <field name="model">velocity.fleet_asset</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_fleet_asset" name="Tankers &amp; Trailers" action="fleet_asset_window_action"
+                  parent="fleet.fleet_vehicles" sequence="100"/>
+
+    </data>
+</odoo>

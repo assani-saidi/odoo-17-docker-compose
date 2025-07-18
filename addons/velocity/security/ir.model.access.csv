@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_velocity_product,velocity.product,model_velocity_product,base.group_user,1,1,1,1
+access_velocity_super_trip,velocity.super_trip,model_velocity_super_trip,base.group_user,1,1,1,1
+access_velocity_fleet_asset,velocity.fleet_asset,model_velocity_fleet_asset,base.group_user,1,1,1,1
+access_velocity_route,velocity.route,model_velocity_route,base.group_user,1,1,1,1
+access_velocity_invoice_trip,velocity.invoice_trip,model_velocity_invoice_trip,base.group_user,1,1,1,1

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="velocity_trips_plan" model="ir.config_parameter">
+            <field name="key">Trips Plan</field>
+            <field name="value" ref="velocity.velocity_trips"/>
+        </record>
+
+         <record id="velocity_super_trips_plan" model="ir.config_parameter">
+            <field name="key">Super Trips Plan</field>
+            <field name="value" ref="velocity.velocity_super_trips"/>
+        </record>
+
+        <record id="velocity_vehicle_plan" model="ir.config_parameter">
+            <field name="key">Tankers Plan</field>
+            <field name="value" ref="velocity.velocity_vehicles"/>
+        </record>
+
+        <record id="velocity_truck_plan" model="ir.config_parameter">
+            <field name="key">Trucks Plan</field>
+            <field name="value" ref="velocity.velocity_trucks"/>
+        </record>
+
+        <record id="velocity_secondary_currency" model="ir.config_parameter">
+            <field name="key">Financial Report Secondary Currency</field>
+            <field name="value">170</field>
+        </record>
+
+         <record id="velocity_liquid_company_id" model="ir.config_parameter">
+            <field name="key">Velocity Liquid Company ID</field>
+            <field name="value">1</field>
+        </record>
+
+    </data>
+</odoo>

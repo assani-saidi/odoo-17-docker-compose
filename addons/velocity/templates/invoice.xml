@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Custom header layout -->
+        <template id="header_template">
+            <!-- header styles here -->
+            <style>
+                .custom_header {
+                }
+            </style>
+
+            <!-- header here -->
+            <div t-attf-class="header">
+                <div class="custom_header">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                         t-attf-style="max-height: #{company.logo_size}px !important; min-height: #{company.logo_size}px !important;"
+                         class="float-start single-page" alt="Logo"/>
+                </div>
+            </div>
+            <!-- calling template here -->
+            <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+                 t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+
+
+            <!--  Footer here -->
+
+            <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
+                <div class="text-center" style="padding-top: 0px !important;">
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Page:
+                        <span class="page"/>
+                        of
+                        <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+
+        </template>
+
+        <!-- Inherit report invoice document -->
+        <template id="invoice_template" inherit_id="account.report_invoice_document">
+            <xpath expr="/t" position="replace">
+                <t t-call="web.external_layout">
+
+                    <!-- Global variables -->
+                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                    <t t-set="doc" t-value="o"/>
+                    <t t-set="company" t-value="doc.company_id"/>
+                    <t t-set="document_type" t-value="doc.move_type"/>
+                    <t t-set="NAME">
+                        <t t-if="o.move_type == 'out_invoice'">FISCAL TAX INVOICE</t>
+                        <t t-if="o.move_type == 'out_refund'">FISCAL CREDIT NOTE</t>
+                        <t t-if="o.move_type == 'in_invoice'">VENDOR BILL</t>
+                        <t t-if="o.move_type == 'in_refund'">VENDOR CREDIT NOTE</t>
+                    </t>
+                    <t t-set="is_credit_note" t-value="doc.move_type in ['out_refund', 'in_refund']"/>
+                    <t t-set="is_out" t-value="'out' in doc.move_type"/>
+
+                    <!-- Global styles -->
+                    <style>
+                        #container{
+                        font-size: 8px !important;
+                        padding: 10px 30px 10px 30px !important;
+                        }
+                        .document-header {
+                        padding-top: 120px !important;
+                        }
+                        .bold {
+                        font-weight: bold !important;
+                        }
+                        #document, #invoice_details {
+                        padding-right: 20px !important;
+                        }
+                        .table-header {
+                        color: white !important;
+                        }
+                        .custom_header {
+                        padding-top: 1000px !important;
+                        }
+                        td {
+                        background-color: white !important;
+                        }
+                        .floating-image {
+                            display: fixed !important;
+                            top: 0 !important;
+                            left: 0 !important;
+                            margin-top: -1000px !important;
+                        }
+                    </style>
+
+                    <!-- CUSTOM TEMPLATE MHEADER HERE -->
+                    <!-- <div t-attf-class="header custom_header">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                                style="max-height: 80px;" alt="Logo"/>
+                    </div> -->
+
+                    <div class="container">
+
+                        <div class="row" id="header">
+
+                            <div class="col-5" id="company">
+                                <!--<img t-if="company.logo" t-attf-style="max-height: #{company.logo_size}px !important; min-height: #{company.logo_size}px !important" t-att-src="image_data_uri(company.logo)" class="d-block logo floating-image" alt="ODOO ERP"/>-->
+
+                                <t t-if="company.is_company_details_empty">
+                                    <b t-field="company.partner_id.name" class="d-block font-weight-bold h5"/>
+                                    <!--<span t-field="company.partner_id" t-options="{'widget': 'contact', 'fields': ['address', 'email', 'phone', 'mobile'], 'no_marker': true}"/>-->
+                                    <span t-esc="'%s, %s, %s, %s' % (company.street, company.street2, company.city, company.country_id.display_name)"/>
+                                    <span t-if="company.phone" t-esc="company.phone"/>
+                                    <br/>
+                                    <span t-if="company.email" t-esc="company.email"/>
+                                    <span t-if="company.partner_id.tin" class="d-block">TIN:
+                                        <t t-esc="company.partner_id.tin"/>
+                                    </span>
+                                    <span t-if="company.partner_id.vat" class="d-block">VAT No:
+                                        <t t-esc="company.partner_id.vat"/>
+                                    </span>
+                                </t>
+                                <div t-else="" t-field="company.company_details"/>
+                            </div>
+
+                            <div class="col-2"/>
+
+                            <div class="col-5">
+                                <h2 class="d-block font-weight-bold h2 text-end text-dark" t-esc="NAME"/>
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-4" id="client">
+
+                            <div class="col-5" id="customer">
+                                <div class="h5 bold">
+                                    Invoice To:
+                                </div>
+                                <b t-field="doc.partner_id.name" class="d-block font-weight-bold h5"/>
+                                <!--<span t-field="doc.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true}"/>-->
+                                <span t-esc="'%s, %s, %s, %s' % (doc.partner_id.street or '', doc.partner_id.street2 or '', doc.partner_id.city or '', doc.partner_id.country_id.display_name or '')"/>
+                                <!--<span t-if="doc.partner_id.phone" t-esc="doc.partner_id.phone"/>
+                                <br/>
+                                <span t-if="doc.partner_id.email" t-esc="doc.partner_id.email"/>-->
+                                <span t-if="doc.partner_id.tin" class="d-block">TIN:
+                                    <t t-esc="doc.partner_id.tin"/>
+                                </span>
+                                <span t-if="doc.partner_id.vat" class="d-block">VAT No:
+                                    <t t-esc="doc.partner_id.vat"/>
+                                </span>
+                            </div>
+
+                            <div class="col-1"/>
+
+                            <!--<div class="col-5" id="invoice_details">
+                                <h6 class="row mt-3 h6">
+                                    <div class="col-6 bold">Invoice Date:</div>
+                                    <div class="col-6 bold text-end" t-field="doc.invoice_date"/>
+                                </h6>
+                                <div class="row mt-3">
+                                    <div class="col-6 bold">Payment Terms:</div>
+                                    <div class="col-6 bold text-end">
+                                        <small t-esc="doc.invoice_payment_term_id.name or 'Due on Receipt'"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6 bold">Due Date:</div>
+                                    <div class="col-6 bold text-end" t-field="doc.invoice_date_due"/>
+                                </div>
+                            </div>-->
+                            <div class="col-6" style="margin-top: -87px !important;"><!-- document-header  id="document" -->
+
+                                <!--<h2 class="d-block font-weight-bold h2 text-end text-dark" t-esc="NAME"/>-->
+
+                                <h6 class="row mt-5 h5"><!-- mt-5 -->
+                                    <t t-if="is_credit_note">
+                                        <div class="col-7 bold text-end" style="padding-right:33px;">Credit Note No.:
+                                        </div>
+                                        <div class="col-5 bold text-end" t-field="doc.name"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="col-7 bold text-end">Document Number:</div>
+                                        <div class="col-5 bold text-end" t-field="doc.name"/>
+                                    </t>
+                                </h6>
+                                <h6 class="row mt-5 h5" t-if="is_credit_note">
+                                    <div class="col-6 bold text-end" style="padding-right:73px;">Ref No:</div>
+                                    <div class="col-6 bold text-end" t-field="doc.reversed_entry_id"/>
+                                </h6>
+                                <h6 class="row mt-5 h5">
+                                    <div t-if="is_credit_note" class="col-6 bold text-end" style="padding-right:43px;" t-esc="'CRN Total:'"/>
+                                    <div t-else="" class="col-6 bold text-end" style="padding-right:21px;" t-esc="'Invoice Total:'"/>
+                                    <div class="col-6 bold text-end" t-field="doc.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" style="white-space: nowrap !important;"/>
+                                </h6>
+                                <h6 class="row mt-5 h5">
+                                    <div class="col-6 bold text-end" style="padding-right:24px;">Invoice Date:</div>
+                                    <div class="col-6 bold text-end" t-field="doc.invoice_date"/>
+                                </h6>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-2" id="details">
+                            <table class="table table-sm table-borderless">
+                                <thead class="p-2 single-page" t-attf-style="background-color: #{company.primary_color}; display: table-row-group !important;">
+                                    <tr>
+                                        <th class="text-start" style="white-space: nowrap;">
+                                            <strong class="table-header">Sr No.</strong>
+                                        </th>
+                                        <th class="text-start" style="white-space: nowrap;">
+                                            <strong class="table-header">Item &amp; Description</strong>
+                                        </th>
+                                        <th class="text-center" style="white-space: nowrap;">
+                                            <strong class="table-header">Qty</strong>
+                                        </th>
+                                        <th class="text-end" style="white-space: nowrap;">
+                                            <strong class="table-header" style="padding-right:16px;">Rate (Incl)
+                                            </strong>
+                                        </th>
+                                        <!--<th class="text-end"><strong class="table-header">Amt (Excl VAT)</strong></th>-->
+                                        <th class="text-end" style="white-space: nowrap;">
+                                            <strong class="table-header" style="padding-right:16px;">VAT</strong>
+                                        </th>
+                                        <th class="text-end" style="white-space: nowrap;">
+                                            <strong class="table-header">Amt (Incl)</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="count" t-value="1"/>
+                                    <t t-foreach="doc.invoice_line_ids" t-as="line">
+                                        <tr class="border border-dark border-1 border-start-0 border-end-0">
+                                            <td class="text-start pb-3 pt-3" width="8%">
+                                                <t t-esc="count"/>
+                                            </td>
+                                            <!-- format label -->
+
+                                            <!-- <t t-if="len(line.name.split('\n')) &gt; 2">
+                                                <t t-set="label" t-value="line.name.split('\n')"/>
+                                                <td class="text-start p-3" width="40%"><t t-esc="label[0]"/><br/><t t-esc="label[1]"/></td>
+                                            </t> -->
+                                            <!-- <t t-esc="line.name"/> -->
+                                            <td t-if="len(line.name.split('\n')) == 1" class="text-start p-3" width="40%">
+                                                <t t-esc="line.name"/>
+                                            </td>
+                                            <td t-else="" class="text-start pb-3 pt-3" width="30%">
+                                                <t t-set="label" t-value="line.name.split('\n')"/>
+                                                <t t-esc="label[0]"/>
+                                                <br/>
+                                                <t t-esc="label[1]"/>
+                                            </td>
+                                            <td class="text-center pb-3 pt-3" width="9%">
+                                                <span t-esc="line.quantity" t-options="{'widget': 'float', 'precision': 2}"/>
+                                            </td>
+                                            <td class="text-end pb-3 pt-3" style="padding-right:10px;" width="17%">
+                                                <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="line.price_total / line.quantity"/>
+                                            </td>
+                                            <!--<td class="text-end" width="15%"><span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="line.price_subtotal"/></td>-->
+                                            <td class="text-end pb-3 pt-3" width="17%">
+                                                <t t-set="vat" t-value="line.price_total - line.price_subtotal"/>
+                                                <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="vat"/>
+                                            </td>
+                                            <td class="text-end pb-3 pt-3" width="17%">
+                                                <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="line.price_total"/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="count" t-value="count + 1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <!--<hr/>-->
+                            <div class="row">
+                                <div class="col-6">
+                                    Amount in words:
+                                    <br/>
+                                    <span class="fst-italic fw-bold" t-esc="doc.currency_id.full_name"/>
+                                    <!--                                     <t t-set="amount_in_words" t-value="doc.amount_total_words"/>
+                                                                        <t t-if="amount_in_words">
+                                                                            <t t-set="amount_in_words" t-value="amount_in_words.strip('False')"/>
+                                                                            <t t-if="doc.currency_id.currency_unit_label in amount_in_words">
+                                                                                <t t-set="amount_in_words" t-value="amount_in_words.strip(doc.currency_id.currency_unit_label)"/>
+                                                                            </t>
+                                                                        </t> -->
+                                    <span class="fst-italic fw-bold" t-esc="doc.amount_total_words"/>
+                                    <!-- <span t-if="'Dollars' in doc.amount_total_words" class="fst-italic fw-bold" t-esc="'%s %s' % (doc.amount_total_words.split('Dollars')[0], doc.amount_total_words.split('Dollars')[1])"/> -->
+                                    <!-- <span t-else="" class="fst-italic fw-bold" t-esc="doc.amount_total_words"/> -->
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-4">
+                                    <table class="table table-sm table-borderless" style="border: none !important;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <strong>Total (Excl):</strong>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="doc.amount_untaxed"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <span t-esc="company.account_purchase_tax_id.name if is_out else company.account_sale_tax_id.name"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="doc.amount_total - doc.amount_untaxed"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <strong>Invoice Total:</strong>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" t-esc="doc.amount_total"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <h6 class="mt-2 h6 col-5" t-if="is_credit_note">
+                                    <div class="bold">Credit Note Reason:</div>
+                                    <div t-esc="doc.ref.split(',')[1] if doc.ref else ''"/>
+                                </h6>
+                                <div class="col-3" t-if="is_credit_note"/>
+                                <div class="col-8" t-if="not is_credit_note"/>
+                                <div class="row col-4"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

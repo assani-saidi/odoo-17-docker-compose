@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="account.account_invoices" model="ir.actions.report">
+            <field name="paperformat_id" ref="velocity.a4_custom_paperformat"/>
+        </record>
+    </data>
+</odoo>

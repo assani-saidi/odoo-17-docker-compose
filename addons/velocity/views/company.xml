@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+
+        <record id="view_company_inherit_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="name">Company Extension View</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="mode">extension</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='color']" position="after">
+                    <field name="logo_size"/>
+                    <field name="external_report_layout_id"/>
+                </xpath>
+            </field>
+        </record> 
+
+    </data>
+</odoo>

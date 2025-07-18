@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+         <record id="payroll_database_date" model="ir.config_parameter">
+            <field name="key">database.payroll.date</field>
+            <field name="value" eval="datetime.today().replace(microsecond=0)"/>
+        </record>
+    </data>
+</odoo>

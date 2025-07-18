@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <record id="custom_layout_default" model="ir.default">
+            <field name="field_id" ref="base.field_res_company__external_report_layout_id"/>
+            <field name="json_value" ref="velocity.header_template"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="services.HomeSubscriptionBanner" t-inherit="web_enterprise.HomeMenu" t-inherit-mode="extension" owl="1">
+        <div>
+            <style>
+                .banner-container{
+                    position: absolute;
+                    width: 100vw;
+                    height: 100vh;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    backdrop-filter: blur(4px);
+                    font-size: 0.8em !important;
+                }
+
+                .banner-center{
+                    display: flex;
+                    align-items: center;
+                    height: 100vh;
+                }
+                .banner{
+                    width: 28vw;
+                    background-color: white;
+                    color: #555 !important;
+                    padding: 3vh;
+                    border-radius: 5px;
+                    margin-bottom: 20vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    position: relative !important;
+                }
+                .instruction{
+                    font-weight: bolder;
+                    padding-bottom: 2vh;
+                    color: #555 !important;
+                }
+                .register{
+                    width: 23vw;
+                    padding: 1vw;
+                    padding-bottom: 0.6vh;
+                    background-color: #E9E9E9;
+                    border-color: white;
+                    margin-bottom: 2vh;
+                    color: #555 !important;
+                    border-radius: 5px;
+                    text-align: center;
+                    border-width: 0;
+                }
+                .buy{
+                    text-decoration: none;
+                    color: #555 !important;
+                }
+                .buy:hover{
+                    color: inherit;
+                }
+                .button{
+                    background-color: #000000;
+                    color: white;
+                    padding: 1vh;
+                    width: 60%;
+                    border-width: 0;
+                    border-radius: 4vh;
+                }
+                .button:hover{
+                    background-color: #0000f !important;
+                }
+                .closable{
+                    position: absolute;
+                    right: 1vw;
+                    top: 1vh;
+                    font-weight: bold;
+                    font-size: 1.5em;
+                    color: red !important;
+                    cursor: pointer;
+                }
+                .bottom-identifier{
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 100vw;
+                    padding: 2vh;
+                    text-align: center;
+                    color: white !important;
+                    font-size: 0.9em;
+                    font-family: barlow;
+                    font-weight: 400;
+                    cursor: copy;
+                }
+            </style>
+            <t t-if="this.state.shown">
+                <div class="banner-container">
+                    <div class="banner-center">
+                        <div class="banner">
+                            <span class="closable"  t-on-click="() => hideBanner()">x</span>
+                            <small class="instruction">
+                                Your payroll subscription has expired!!!
+                            </small>
+                            <h2 class="instruction">
+                                Register your payroll
+                            </h2>
+                            <form>
+                                <input type="text" class="register" t-ref="code"/>
+                            </form>
+                            <t t-if="!this.state.registering">
+                                <button class="button" t-on-click="() => this.onSubmitSubscription()">register</button>
+                            </t>
+                            <t t-if="this.state.registering">
+                                <div>Registering...</div>
+                            </t>
+                            <hr/>
+                            <a class="buy" href="https://rashiddesigns.odoo.com/contactus">buy a subscription</a>
+                            <hr/>
+                            <small><b><i>Note that you must be online to register your subscription</i></b></small>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <div class="bottom-identifier">
+                <div t-esc="this.state.uuid" t-on-click="() => copyID()" title="Copy ID"/>
+            </div>
+        </div>
+    </t>
+</templates>

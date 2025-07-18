@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="velocity_generic_sequence" model="ir.sequence">
+            <field name="name">Velocity Generic Sequence</field>
+            <field name="implementation">standard</field>
+            <field name="code">VL</field>
+            <field name="prefix">VL-%(y)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="active" eval="True"/>
+            <field name="company_id" eval="1"/>
+        </record>
+        <record id="velocity_liquid_sequence" model="ir.sequence">
+            <field name="name">Velocity Liquid Sequence</field>
+            <field name="implementation">standard</field>
+            <field name="code">HT</field>
+            <field name="prefix">HT-%(y)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="active" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="velocity_dry_sequence" model="ir.sequence">
+            <field name="name">Velocity Dry Sequence</field>
+            <field name="implementation">standard</field>
+            <field name="code">FS</field>
+            <field name="prefix">FS-%(y)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="active" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

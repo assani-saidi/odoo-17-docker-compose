@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <template id="minimal_template" inherit_id="web.minimal_layout">
+            <xpath expr="//script" position="inside">
+                 var operations = {
+	
+                    'single-page': function (elt)
+
+                    {
+
+                        elt.style.display = (vars.page == 1) ? "block" : "none";
+
+                    },
+
+                };
+	
+	
+                for (var klass in operations)
+
+                {
+
+                    var y = document.getElementsByClassName(klass);
+
+                    for (var j=0; j&lt;y.length; ++j)
+
+                    operations[klass](y[j]);
+
+                }
+            </xpath>
+        </template>
+    </data>
+</odoo>

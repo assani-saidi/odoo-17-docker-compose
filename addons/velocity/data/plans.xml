@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="velocity_trips" model="account.analytic.plan">
+            <field name="name">TRIPS</field>
+            <field name="default_applicability">optional</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="velocity_super_trips" model="account.analytic.plan">
+            <field name="name">SUPER TRIPS</field>
+            <field name="default_applicability">optional</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="velocity_vehicles" model="account.analytic.plan">
+            <field name="name">TANKERS</field>
+            <field name="default_applicability">optional</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="velocity_trucks" model="account.analytic.plan">
+            <field name="name">TRUCKS</field>
+            <field name="default_applicability">optional</field>
+            <field name="color">4</field>
+        </record>
+
+    </data>
+</odoo>
