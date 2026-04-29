@@ -1,29 +1,13 @@
-version: '2'
 services:
   db:
-    image: postgres:16
+    image: postgres:latest
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=rashid
       - POSTGRES_DB=postgres
     restart: always # run as a service
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    user: root
-    environment:
-      PGADMIN_DEFAULT_EMAIL: assanisaidi73@gmail.com # Update with your preferred email
-      PGADMIN_DEFAULT_PASSWORD: rashid # Update with a secure password
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - "3000:80" # Access pgAdmin at http://localhost:3000
-    depends_on:
-      - db
-    volumes:
-      - /var/lib/pgadmin
-    restart: unless-stopped
+      - ./postgresql:/var/lib/postgresql
 
   odoo17:
     image: odoo:17
